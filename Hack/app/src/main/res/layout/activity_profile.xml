@@ -6,12 +6,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ProfileActivity">
 
+    <FrameLayout
+        android:layout_above="@id/navigation"
+        android:id="@+id/fragment_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </FrameLayout>
+
     <View
         android:id="@+id/translucent_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#8CE0E0E0"
+        android:background="#F2E0E0E0"
         android:visibility="invisible" />
+
 
     <FrameLayout
         android:id="@+id/form_fragment_frame"
@@ -29,13 +39,6 @@
         android:layout_centerHorizontal="true">
 
 
-
-        <FrameLayout
-            android:id="@+id/fragment_frame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </FrameLayout>
 
     </LinearLayout>
 
