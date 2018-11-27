@@ -31,6 +31,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private TextView textViewUserEmail;
     private Button buttonLogout;
     private int fab_clicked = 0;
+    private boolean formOnScreen = false;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -48,17 +50,29 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     fragment = new VolunteerFragment();
                     break;
             }
-            loadFragment(fragment);
+            loadFragment(fragment,0);
             return true;
         }
     };
 
-    private void loadFragment(Fragment fragment) {
-        if(fragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame,fragment).commit();
+    private void loadFragment(Fragment fragment, int i) {
+        if(i == 0) {
+            if (fragment != null) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).commit();
+            } else
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, new AmenitiesFragment()).commit();
         }
         else
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame,new AmenitiesFragment()).commit();
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.form_appear,R.animator.form_appear).replace(R.id.form_fragment_frame,fragment).commit();
+
+    }
+
+    private void removeForm() {
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.form_disappear,R.animator.form_disappear).remove(fragment).commit();
+        findViewById(R.id.navigation).animate().translationYBy(-150);
+        findViewById(R.id.translucent_bg).setVisibility(View.GONE);
+        formOnScreen = false;
+        fab_clicked = 0;
 
     }
 
@@ -107,18 +121,26 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         final LinearLayout fab_sos_layout = (LinearLayout) findViewById(R.id.fab_sos_layout);
         final LinearLayout fab_volunteer_layout = (LinearLayout) findViewById(R.id.fab_volunteer_layout);
 
-        //Load default fragment//
-        loadFragment(null);
-
         //Translucent Background Created //
         final View trans_bg = findViewById(R.id.translucent_bg);
+
+        //Load default fragment//
+        loadFragment(null,0);
+
 
         findViewById(R.id.navigation).animate().alpha(100);
 
         trans_bg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(fab_clicked==1)
+
+                Log.i("Transparentbg","clicked");
+
+                if(formOnScreen) {
+                    removeForm();
+                }
+
+                else if(fab_clicked==1)
                 {
                     fab_plus.animate().rotationBy(-90);
                     findViewById(R.id.navigation).animate().translationYBy(-150);
@@ -175,7 +197,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         fab_amenities.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("FAB","CLICKED");
+
+                Log.i("Amenities","clicked");
+
+                formOnScreen = true;
+
+                fragment = new AmenitiesFormFragment();
+
+                trans_bg.setVisibility(View.VISIBLE);
+                fab_amenities_layout.animate().translationYBy(250);
+                fab_sos_layout.animate().translationYBy(500);
+                fab_volunteer_layout.animate().translationYBy(750);
+                fab_amenities_layout.setVisibility(View.GONE);
+                fab_sos_layout.setVisibility(View.GONE);
+                fab_volunteer_layout.setVisibility(View.GONE);
+                //fab_plus.setVisibility(View.INVISIBLE);
+
+                loadFragment(fragment,1);
             }
         });
     }
@@ -191,5 +229,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             //Start LoginActivity
             startActivity(new Intent(this, LoginActivity.class));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(formOnScreen)
+            removeForm();
+
     }
 }
