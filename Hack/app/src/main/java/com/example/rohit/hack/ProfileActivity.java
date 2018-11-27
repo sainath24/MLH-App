@@ -20,7 +20,12 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+class Post {
+    String heading,description,address,pid;
+    Double lat,lon;
+}
+
+public class ProfileActivity extends AppCompatActivity {
 
     //Firebase auth object //
     private FirebaseAuth firebaseAuth;
@@ -98,14 +103,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
         //Initialise Views //
-        textViewUserEmail = (TextView) findViewById(R.id.textViewUserEmail);
-        buttonLogout = (Button) findViewById(R.id.buttonLogout);
+        //textViewUserEmail = (TextView) findViewById(R.id.textViewUserEmail);
+        //buttonLogout = (Button) findViewById(R.id.buttonLogout);
 
         //Display Email //
         //textViewUserEmail.setText("Hola "+user.getEmail());
 
         //Add Listener to Button //
-        buttonLogout.setOnClickListener(this);
+        //buttonLogout.setOnClickListener(this);
 
         //Creating button Navigation object //
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -215,19 +220,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 loadFragment(fragment,1);
             }
         });
-    }
-
-    @Override
-    public void onClick(View view) {
-        //if logout is pressed //
-        if(view == buttonLogout){
-            //SignOut //
-            firebaseAuth.signOut();
-            //Close ProfileActivity
-            finish();
-            //Start LoginActivity
-            startActivity(new Intent(this, LoginActivity.class));
-        }
     }
 
     @Override
