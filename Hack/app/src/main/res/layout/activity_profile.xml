@@ -6,14 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ProfileActivity">
 
-
-
     <View
         android:id="@+id/translucent_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#8CE0E0E0"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
     <FrameLayout
         android:id="@+id/form_fragment_frame"
@@ -21,6 +19,7 @@
         android:layout_height="match_parent">
 
     </FrameLayout>
+
 
     <LinearLayout
         android:orientation="vertical"

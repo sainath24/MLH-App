@@ -70,6 +70,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void removeForm() {
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.form_disappear,R.animator.form_disappear).remove(fragment).commit();
         findViewById(R.id.navigation).animate().translationYBy(-150);
+        findViewById(R.id.navbar_drop_shadow).animate().translationYBy(-150);
         findViewById(R.id.translucent_bg).setVisibility(View.GONE);
         formOnScreen = false;
         fab_clicked = 0;
@@ -110,7 +111,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
         // FAB objects Created //
         final FloatingActionButton fab_plus = (FloatingActionButton) findViewById(R.id.fab_plus);
         final FloatingActionButton fab_amenities = (FloatingActionButton) findViewById(R.id.fab_amenities);
@@ -136,22 +136,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                 Log.i("Transparentbg","clicked");
 
-                if(formOnScreen) {
-                    removeForm();
-                }
+                if (formOnScreen)
+                        removeForm();
 
                 else if(fab_clicked==1)
                 {
                     fab_plus.animate().rotationBy(-90);
                     findViewById(R.id.navigation).animate().translationYBy(-150);
                     findViewById(R.id.navbar_drop_shadow).animate().translationYBy(-150);
-                    trans_bg.setVisibility(View.GONE);
+                    trans_bg.setVisibility(View.INVISIBLE);
                     fab_amenities_layout.animate().translationYBy(250);
                     fab_sos_layout.animate().translationYBy(500);
                     fab_volunteer_layout.animate().translationYBy(750);
-                    fab_amenities_layout.setVisibility(View.GONE);
-                    fab_sos_layout.setVisibility(View.GONE);
-                    fab_volunteer_layout.setVisibility(View.GONE);
+                    fab_amenities_layout.setVisibility(View.INVISIBLE);
+                    fab_sos_layout.setVisibility(View.INVISIBLE);
+                    fab_volunteer_layout.setVisibility(View.INVISIBLE);
                     fab_clicked = 0;
                 }
             }
@@ -180,7 +179,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     fab_plus.animate().rotationBy(-90);
                     findViewById(R.id.navigation).animate().translationYBy(-150);
                     findViewById(R.id.navbar_drop_shadow).animate().translationYBy(-150);
-                    trans_bg.setVisibility(View.GONE);
+                    trans_bg.setVisibility(View.INVISIBLE);
                     fab_amenities_layout.animate().translationYBy(+250);
                     fab_amenities_layout.setVisibility(View.INVISIBLE);
 
@@ -208,9 +207,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 fab_amenities_layout.animate().translationYBy(250);
                 fab_sos_layout.animate().translationYBy(500);
                 fab_volunteer_layout.animate().translationYBy(750);
-                fab_amenities_layout.setVisibility(View.GONE);
-                fab_sos_layout.setVisibility(View.GONE);
-                fab_volunteer_layout.setVisibility(View.GONE);
+                fab_amenities_layout.setVisibility(View.INVISIBLE);
+                fab_sos_layout.setVisibility(View.INVISIBLE);
+                fab_volunteer_layout.setVisibility(View.INVISIBLE);
                 //fab_plus.setVisibility(View.INVISIBLE);
 
                 loadFragment(fragment,1);
@@ -233,7 +232,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(!formOnScreen)
+            super.onBackPressed();
         if(formOnScreen)
             removeForm();
 
