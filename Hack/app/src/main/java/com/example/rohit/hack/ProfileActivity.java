@@ -122,6 +122,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 {
                     fab_plus.animate().rotationBy(-90);
                     findViewById(R.id.navigation).animate().translationYBy(-150);
+                    findViewById(R.id.navbar_drop_shadow).animate().translationYBy(-150);
                     trans_bg.setVisibility(View.GONE);
                     fab_amenities_layout.animate().translationYBy(250);
                     fab_sos_layout.animate().translationYBy(500);
@@ -142,6 +143,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 if (fab_clicked == 0) {
                     fab_plus.animate().rotationBy(90);
                     findViewById(R.id.navigation).animate().translationYBy(150);
+                    findViewById(R.id.navbar_drop_shadow).animate().translationYBy(150);
                     trans_bg.setVisibility(View.VISIBLE);
                     fab_amenities_layout.animate().translationYBy(-250);
                     fab_amenities_layout.setVisibility(View.VISIBLE);
@@ -155,6 +157,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 } else {
                     fab_plus.animate().rotationBy(-90);
                     findViewById(R.id.navigation).animate().translationYBy(-150);
+                    findViewById(R.id.navbar_drop_shadow).animate().translationYBy(-150);
                     trans_bg.setVisibility(View.GONE);
                     fab_amenities_layout.animate().translationYBy(+250);
                     fab_amenities_layout.setVisibility(View.INVISIBLE);
