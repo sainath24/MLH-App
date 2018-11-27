@@ -1,5 +1,6 @@
 package com.example.rohit.hack;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -96,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 
         // FAB objects Created //
-        FloatingActionButton fab_plus = (FloatingActionButton) findViewById(R.id.fab_plus);
+        final FloatingActionButton fab_plus = (FloatingActionButton) findViewById(R.id.fab_plus);
         final FloatingActionButton fab_amenities = (FloatingActionButton) findViewById(R.id.fab_amenities);
         final FloatingActionButton fab_sos = (FloatingActionButton) findViewById(R.id.fab_sos);
         final FloatingActionButton fab_volunteer = (FloatingActionButton) findViewById(R.id.fab_volunteer);
@@ -110,21 +112,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         //Translucent Background Created //
         final View trans_bg = findViewById(R.id.translucent_bg);
+
+        findViewById(R.id.navigation).animate().alpha(100);
+
         trans_bg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(fab_clicked==1)
                 {
-                    findViewById(R.id.navigation).setVisibility(View.VISIBLE);
+                    fab_plus.animate().rotationBy(-90);
+                    findViewById(R.id.navigation).animate().translationYBy(-150);
                     trans_bg.setVisibility(View.GONE);
-                    fab_amenities_layout.animate().translationYBy(+250);
-                    fab_amenities_layout.setVisibility(View.INVISIBLE);
-
+                    fab_amenities_layout.animate().translationYBy(250);
                     fab_sos_layout.animate().translationYBy(500);
-                    fab_sos_layout.setVisibility(View.INVISIBLE);
-
                     fab_volunteer_layout.animate().translationYBy(750);
-                    fab_volunteer_layout.setVisibility(View.INVISIBLE);
+                    fab_amenities_layout.setVisibility(View.GONE);
+                    fab_sos_layout.setVisibility(View.GONE);
+                    fab_volunteer_layout.setVisibility(View.GONE);
                     fab_clicked = 0;
                 }
             }
@@ -136,7 +140,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 if (fab_clicked == 0) {
-                    findViewById(R.id.navigation).setVisibility(View.INVISIBLE);
+                    fab_plus.animate().rotationBy(90);
+                    findViewById(R.id.navigation).animate().translationYBy(150);
                     trans_bg.setVisibility(View.VISIBLE);
                     fab_amenities_layout.animate().translationYBy(-250);
                     fab_amenities_layout.setVisibility(View.VISIBLE);
@@ -148,7 +153,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     fab_volunteer_layout.setVisibility(View.VISIBLE);
                     fab_clicked = 1;
                 } else {
-                    findViewById(R.id.navigation).setVisibility(View.VISIBLE);
+                    fab_plus.animate().rotationBy(-90);
+                    findViewById(R.id.navigation).animate().translationYBy(-150);
                     trans_bg.setVisibility(View.GONE);
                     fab_amenities_layout.animate().translationYBy(+250);
                     fab_amenities_layout.setVisibility(View.INVISIBLE);
