@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     //Firebase auth object //
     private FirebaseAuth firebaseAuth;
+
+    private Fragment fragment = null;
 
     //View objects //
     private TextView textViewUserEmail;
@@ -33,18 +37,28 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    textViewUserEmail.setText("Clicled on Amenities");
-                    return true;
+                    fragment = new AmenitiesFragment();
+                    break;
                 case R.id.navigation_dashboard:
-                    textViewUserEmail.setText("Clicked on SOS");
-                    return true;
+                    fragment = new SOSFragment();
+                    break;
                 case R.id.navigation_notifications:
-                    textViewUserEmail.setText("Clicked on Voluenteer");
-                    return true;
+                    fragment = new VolunteerFragment();
+                    break;
             }
-            return false;
+            loadFragment(fragment);
+            return true;
         }
     };
+
+    private void loadFragment(Fragment fragment) {
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame,fragment).commit();
+        }
+        else
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame,new AmenitiesFragment()).commit();
+
+    }
 
 
     @Override
@@ -56,12 +70,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         firebaseAuth = FirebaseAuth.getInstance();
 
         ////getCurrentUser returns null if user is not logged in //
-        if(firebaseAuth.getCurrentUser() == null){
+       /* if(firebaseAuth.getCurrentUser() == null){
             // Close Activity //
             finish();
             //Start Login Activity //
             startActivity(new Intent(this, LoginActivity.class));
-        }
+        } */
 
         //user is now the currentUser //
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -71,7 +85,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         buttonLogout = (Button) findViewById(R.id.buttonLogout);
 
         //Display Email //
-        textViewUserEmail.setText("Hola "+user.getEmail());
+        //textViewUserEmail.setText("Hola "+user.getEmail());
 
         //Add Listener to Button //
         buttonLogout.setOnClickListener(this);
@@ -91,6 +105,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         final LinearLayout fab_sos_layout = (LinearLayout) findViewById(R.id.fab_sos_layout);
         final LinearLayout fab_volunteer_layout = (LinearLayout) findViewById(R.id.fab_volunteer_layout);
 
+        //Load default fragment//
+        loadFragment(null);
+
         //Translucent Background Created //
         final View trans_bg = findViewById(R.id.translucent_bg);
         trans_bg.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +115,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 if(fab_clicked==1)
                 {
+                    findViewById(R.id.navigation).setVisibility(View.VISIBLE);
                     trans_bg.setVisibility(View.GONE);
                     fab_amenities_layout.animate().translationYBy(+250);
                     fab_amenities_layout.setVisibility(View.INVISIBLE);
@@ -118,6 +136,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 if (fab_clicked == 0) {
+                    findViewById(R.id.navigation).setVisibility(View.INVISIBLE);
                     trans_bg.setVisibility(View.VISIBLE);
                     fab_amenities_layout.animate().translationYBy(-250);
                     fab_amenities_layout.setVisibility(View.VISIBLE);
@@ -129,6 +148,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     fab_volunteer_layout.setVisibility(View.VISIBLE);
                     fab_clicked = 1;
                 } else {
+                    findViewById(R.id.navigation).setVisibility(View.VISIBLE);
                     trans_bg.setVisibility(View.GONE);
                     fab_amenities_layout.animate().translationYBy(+250);
                     fab_amenities_layout.setVisibility(View.INVISIBLE);
