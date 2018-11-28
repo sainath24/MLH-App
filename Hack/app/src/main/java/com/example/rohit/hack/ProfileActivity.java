@@ -2,13 +2,17 @@ package com.example.rohit.hack;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,6 +20,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -85,6 +90,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +123,10 @@ public class ProfileActivity extends AppCompatActivity {
         //Creating button Navigation object //
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        android.support.v7.widget.Toolbar homeToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.home_toolbar);
+        setSupportActionBar(homeToolbar);
+
 
         // FAB objects Created //
         final FloatingActionButton fab_plus = (FloatingActionButton) findViewById(R.id.fab_plus);
@@ -279,5 +289,12 @@ public class ProfileActivity extends AppCompatActivity {
         if(formOnScreen)
             removeForm();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.toolbar,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

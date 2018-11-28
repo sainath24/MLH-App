@@ -7,6 +7,7 @@
     tools:context=".ProfileActivity">
 
     <FrameLayout
+        android:layout_below="@id/home_toolbar"
         android:layout_above="@id/navigation"
         android:id="@+id/fragment_frame"
         android:layout_width="match_parent"
@@ -30,8 +31,19 @@
 
     </FrameLayout>
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/home_toolbar"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/hackTheme">
+
+
+    </android.support.v7.widget.Toolbar>
+
 
     <LinearLayout
+        android:layout_below="@id/home_toolbar"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

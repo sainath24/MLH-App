@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -46,6 +47,7 @@ public class FormFragment extends Fragment {
     Post post = new Post();
 
     private LocationRequest mLocationRequest;
+    LocationManager locationManager;
 
     public void onLocationChanged(Location location) {
         // New location has now been determined
@@ -72,7 +74,7 @@ public class FormFragment extends Fragment {
 
         TextView formName = (TextView) rootView.findViewById(R.id.form_name);
 
-        final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
 
 
@@ -80,48 +82,57 @@ public class FormFragment extends Fragment {
 
         final EditText address = (EditText) rootView.findViewById(R.id.amenities_form_address);
 
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        // Check whether location settings are satisfied
+        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+        SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
 
         useCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View view) {
                 if(useCurrentLocation.isChecked() && address.getEditableText().toString().equals("")) {
-                    mLocationRequest = new LocationRequest();
-                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+                    if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
 
-                    // Create LocationSettingsRequest object using location request
-                    LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-                    builder.addLocationRequest(mLocationRequest);
-                    LocationSettingsRequest locationSettingsRequest = builder.build();
-
-                    // Check whether location settings are satisfied
-                    // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-                    SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
-                    settingsClient.checkLocationSettings(locationSettingsRequest);
-
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                99);
-                        return;
+                        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    99);
+                            return;
+                        }
+                        getFusedLocationProviderClient(getActivity()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                                    @Override
+                                    public void onLocationResult(LocationResult locationResult) {
+                                        // do work here
+                                        onLocationChanged(locationResult.getLastLocation());
+                                        address.setText(post.address);
+                                    }
+                                },
+                                Looper.myLooper());
                     }
-                    getFusedLocationProviderClient(getActivity()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                                @Override
-                                public void onLocationResult(LocationResult locationResult) {
-                                    // do work here
-                                    onLocationChanged(locationResult.getLastLocation());
-                                    address.setText(post.address);
-                                }
-                            },
-                            Looper.myLooper());
+                    else {
+                        Toast.makeText(getContext(), "GPS is disabled. Enable and try again", Toast.LENGTH_SHORT).show();
+                        useCurrentLocation.setChecked(false);
+                    }
 
                 }
                 else {
