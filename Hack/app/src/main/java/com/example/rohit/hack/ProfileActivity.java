@@ -27,6 +27,8 @@ class Post {
 
 public class ProfileActivity extends AppCompatActivity {
 
+    static int fabOptionClicked;
+
     //Firebase auth object //
     private FirebaseAuth firebaseAuth;
 
@@ -204,9 +206,57 @@ public class ProfileActivity extends AppCompatActivity {
 
                 Log.i("Amenities","clicked");
 
+                fabOptionClicked = 1;
+
                 formOnScreen = true;
 
-                fragment = new AmenitiesFormFragment();
+                fragment = new FormFragment();
+
+                trans_bg.setVisibility(View.VISIBLE);
+                fab_amenities_layout.animate().translationYBy(250);
+                fab_sos_layout.animate().translationYBy(500);
+                fab_volunteer_layout.animate().translationYBy(750);
+                fab_amenities_layout.setVisibility(View.INVISIBLE);
+                fab_sos_layout.setVisibility(View.INVISIBLE);
+                fab_volunteer_layout.setVisibility(View.INVISIBLE);
+                //fab_plus.setVisibility(View.INVISIBLE);
+
+                loadFragment(fragment,1);
+            }
+        });
+
+        fab_sos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                fabOptionClicked = 2;
+
+                formOnScreen = true;
+
+                fragment = new FormFragment();
+
+                trans_bg.setVisibility(View.VISIBLE);
+                fab_amenities_layout.animate().translationYBy(250);
+                fab_sos_layout.animate().translationYBy(500);
+                fab_volunteer_layout.animate().translationYBy(750);
+                fab_amenities_layout.setVisibility(View.INVISIBLE);
+                fab_sos_layout.setVisibility(View.INVISIBLE);
+                fab_volunteer_layout.setVisibility(View.INVISIBLE);
+                //fab_plus.setVisibility(View.INVISIBLE);
+
+                loadFragment(fragment,1);
+
+            }
+        });
+
+        fab_volunteer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fabOptionClicked = 3;
+
+                formOnScreen = true;
+
+                fragment = new FormFragment();
 
                 trans_bg.setVisibility(View.VISIBLE);
                 fab_amenities_layout.animate().translationYBy(250);
