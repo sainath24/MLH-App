@@ -3,12 +3,14 @@ package com.example.rohit.hack;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +52,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Post p = posts.get(i);
         dataHolder.h.setText(p.heading);
         dataHolder.b.setText(p.description);
-        dataHolder.l.setText("near by");
+        if(p.distancetoPost == null)
+            dataHolder.l.setText("Enable gps to show distance");
+        else
+            dataHolder.l.setText(new DecimalFormat("##.##").format(p.distancetoPost) + " Km");
 
     }
 

@@ -65,8 +65,6 @@ public class FormFragment extends Fragment {
     }
 
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -107,13 +105,6 @@ public class FormFragment extends Fragment {
 
 
                         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-                            //    ActivityCompat#requestPermissions
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for ActivityCompat#requestPermissions for more details.
                             ActivityCompat.requestPermissions(getActivity(),
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                     99);
@@ -175,6 +166,7 @@ public class FormFragment extends Fragment {
 
                 post.heading = heading.getEditableText().toString();
                 post.description = description.getEditableText().toString();
+                post.address = address.getEditableText().toString();
 
                 Geocoder geocoder = new Geocoder(getContext());
                 List<Address> addresses = new ArrayList<>();
@@ -184,7 +176,6 @@ public class FormFragment extends Fragment {
                     e.printStackTrace();
                 }
                 Address location = addresses.get(0);
-                Log.i("COMEON",String.valueOf(location.getLatitude()));
                 post.lat = location.getLatitude();
                 post.lon = location.getLongitude();
 

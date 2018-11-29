@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 class Post {
     String heading,description,address,pid;
-    Double lat,lon;
+    Double lat,lon,distancetoPost;
 }
 
 public class ProfileActivity extends AppCompatActivity {
@@ -296,5 +297,12 @@ public class ProfileActivity extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.toolbar,menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.toolbar_settings)
+            Toast.makeText(this, "Clicked on settings", Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
     }
 }
