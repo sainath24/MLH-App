@@ -113,7 +113,7 @@ public class AmenitiesFragment extends Fragment {
                                         postLocation = new Location("");
                                         postLocation.setLatitude(p.lat);
                                         postLocation.setLongitude(p.lon);
-                                        if (currentUserLocation.distanceTo(postLocation) / 1000 < 7) {
+                                        if (currentUserLocation.distanceTo(postLocation) / 1000 < ProfileActivity.radiusOfSearch) {
                                             p.distancetoPost = currentUserLocation.distanceTo(postLocation) / 1000.0;
                                             posts.add(p);
                                         }

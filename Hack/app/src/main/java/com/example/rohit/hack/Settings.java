@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.PriorityQueue;
+
 public class Settings extends AppCompatActivity {
 
     @Override
@@ -19,14 +21,16 @@ public class Settings extends AppCompatActivity {
 
         SeekBar radiusOfSearch = (SeekBar) findViewById(R.id.settings_radius_seekbar);
         radiusOfSearch.setMax(50);
+        radiusOfSearch.setProgress(ProfileActivity.radiusOfSearch);
         final TextView searchRadiusText = (TextView) findViewById(R.id.search_radius_text);
+
+        searchRadiusText.setText(String.valueOf(ProfileActivity.radiusOfSearch));
+
         radiusOfSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 searchRadiusText.setText(String.valueOf(i)+" Km");
-                /*TODO:
-                    Change static search distance variable
-                 */
+                ProfileActivity.radiusOfSearch = i;
 
             }
 

@@ -33,6 +33,8 @@ class Post {
 
 public class ProfileActivity extends AppCompatActivity {
 
+    static int radiusOfSearch = 7;
+
     static int fabOptionClicked;
 
     //Firebase auth object //
