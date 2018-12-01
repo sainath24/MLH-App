@@ -110,7 +110,6 @@ public class AmenitiesFragment extends Fragment {
                                 @Override
                                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                     p = dataSnapshot.getValue(Post.class);
-                                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                                         postLocation = new Location("");
                                         postLocation.setLatitude(p.lat);
                                         postLocation.setLongitude(p.lon);
@@ -118,8 +117,6 @@ public class AmenitiesFragment extends Fragment {
                                             p.distancetoPost = currentUserLocation.distanceTo(postLocation) / 1000.0;
                                             posts.add(p);
                                         }
-
-                                    }
                                     recyclerViewAdapter.notifyDataSetChanged();
 
                                 }
