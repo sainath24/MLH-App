@@ -302,7 +302,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.toolbar_settings)
-            Toast.makeText(this, "Clicked on settings", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this,Settings.class));
         return super.onOptionsItemSelected(item);
     }
 }
