@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -21,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,16 +34,21 @@ import android.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 class Post implements Serializable {
-    String heading,description,address,pid;
+    String heading,description,address,pid,contact;
     Double lat,lon,distancetoPost;
 }
 
 public class ProfileActivity extends AppCompatActivity {
 
     static int radiusOfSearch = 7;
+
+    static boolean searching = false;
 
     static int fabOptionClicked;
 
@@ -55,6 +64,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Button buttonLogout;
     private int fab_clicked = 0;
     private boolean formOnScreen = false;
+
+    EditText search;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -134,6 +145,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Add Listener to Button //
         //buttonLogout.setOnClickListener(this);
+
+        search  = (EditText) findViewById(R.id.search_bar);
 
         //Creating button Navigation object //
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -321,6 +334,43 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.toolbar_settings)
             startActivity(new Intent(this,Settings.class));
+        else if(item.getItemId() == R.id.search_toolbar_icon) {
+            if(search.getVisibility() == View.INVISIBLE) {
+                search.setVisibility(View.VISIBLE);
+                searching = true;
+
+            }
+            else if(search.getVisibility() == View.VISIBLE) {
+
+                Geocoder geocoder = new Geocoder(getApplicationContext());
+                List<Address> addresses = new ArrayList<>();
+                try {
+                    addresses = geocoder.getFromLocationName(search.getEditableText().toString(),1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Address location = addresses.get(0);
+                Log.i("COMEON",String.valueOf(activitySelected));
+                if(activitySelected == 1) {
+                    AmenitiesFragment.currentUserLocation = new Location("");
+                    AmenitiesFragment.currentUserLocation.setLatitude(location.getLatitude());
+                    AmenitiesFragment.currentUserLocation.setLongitude(location.getLongitude());
+                }
+                else if(activitySelected == 2) {
+                    SOSFragment.currentUserLocation = new Location("");
+                    SOSFragment.currentUserLocation.setLatitude(location.getLatitude());
+                    SOSFragment.currentUserLocation.setLongitude(location.getLongitude());
+                }
+
+                loadFragment(fragment,0);
+                search.setVisibility(View.INVISIBLE);
+
+
+
+            }
+
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

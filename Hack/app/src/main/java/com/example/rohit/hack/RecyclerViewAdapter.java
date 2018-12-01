@@ -57,8 +57,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     position++;
+
+
                     if(position == AmenitiesFragment.recyclerView.getChildLayoutPosition(view)) {
-                        p = dataSnapshot.getValue(Post.class);
+                        if(ProfileActivity.activitySelected == 1)
+                            p = AmenitiesFragment.posts.get(position);
+                        else if(ProfileActivity.activitySelected == 2)
+                            p = SOSFragment.posts.get(position);
+                        else if(ProfileActivity.activitySelected == 3)
+                            p = VolunteerFragment.posts.get(position);
                         context.startActivity(new Intent(context,PostExpanded.class).putExtra("post",p));
 
                         //LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(context,ProfileActivity.class).putExtra("pid",p.pid));
@@ -125,8 +132,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.DataHolder dataHolder, int i) {
         Post p = posts.get(i);
-        dataHolder.h.setText(p.heading);
-        dataHolder.b.setText(p.description);
+        if(p.heading.length() > 20)
+            dataHolder.h.setText(p.heading.substring(0,19) + "...");
+        else
+            dataHolder.h.setText(p.heading);
+        if(p.description.length() > 45)
+            dataHolder.b.setText(p.description.substring(0,39) + "...");
+        else
+            dataHolder.b.setText(p.description);
         if(p.distancetoPost == null)
             dataHolder.l.setText("Enable gps to show distance");
         else

@@ -46,7 +46,7 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 
 public class AmenitiesFragment extends Fragment {
 
-    ArrayList<Post> posts;
+    static ArrayList<Post> posts;
     Post p;
     RecyclerViewAdapter recyclerViewAdapter;
     static RecyclerView recyclerView;
@@ -82,7 +82,108 @@ public class AmenitiesFragment extends Fragment {
         SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !ProfileActivity.searching) {
+            posts = new ArrayList<>();
+
+
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.amenities_recycler_view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerViewAdapter = new RecyclerViewAdapter(posts, getActivity());
+            recyclerView.setAdapter(recyclerViewAdapter);
+            recyclerViewAdapter.notifyDataSetChanged();
+
+            DatabaseReference amenitiesDB = FirebaseDatabase.getInstance().getReference("Amenities");
+
+            amenitiesDB.orderByKey().addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    p = dataSnapshot.getValue(Post.class);
+                    p.distancetoPost = null;
+                    posts.add(p);
+
+                    recyclerViewAdapter.notifyDataSetChanged();
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+
+
+        if(ProfileActivity.searching) {
+            Log.i("COMEON","INSIDE FUNCTION");
+
+            posts = new ArrayList<>();
+
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.amenities_recycler_view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerViewAdapter = new RecyclerViewAdapter(posts, getActivity());
+            recyclerView.setAdapter(recyclerViewAdapter);
+            recyclerViewAdapter.notifyDataSetChanged();
+
+            DatabaseReference amenitiesDB = FirebaseDatabase.getInstance().getReference("Amenities");
+
+            amenitiesDB.orderByKey().addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    Log.i("COMEON","INSIDE LISTENER");
+                    p = dataSnapshot.getValue(Post.class);
+                    postLocation = new Location("");
+                    postLocation.setLatitude(p.lat);
+                    postLocation.setLongitude(p.lon);
+                    if (currentUserLocation.distanceTo(postLocation) / 1000 < ProfileActivity.radiusOfSearch) {
+                        p.distancetoPost = currentUserLocation.distanceTo(postLocation) / 1000.0;
+                        posts.add(p);
+                    }
+                    recyclerViewAdapter.notifyDataSetChanged();
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            ProfileActivity.searching = false;
+        }
+
+
+        else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
 
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -151,50 +252,7 @@ public class AmenitiesFragment extends Fragment {
         }
 
 
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            posts = new ArrayList<>();
 
-
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.amenities_recycler_view);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerViewAdapter = new RecyclerViewAdapter(posts, getActivity());
-            recyclerView.setAdapter(recyclerViewAdapter);
-            recyclerViewAdapter.notifyDataSetChanged();
-
-            DatabaseReference amenitiesDB = FirebaseDatabase.getInstance().getReference("Amenities");
-
-            amenitiesDB.orderByKey().addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    p = dataSnapshot.getValue(Post.class);
-                    p.distancetoPost = null;
-                    posts.add(p);
-
-                    recyclerViewAdapter.notifyDataSetChanged();
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
 
 
 
