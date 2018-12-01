@@ -1,13 +1,17 @@
 package com.example.rohit.hack;
 
 import android.animation.Animator;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +30,9 @@ import android.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-class Post {
+import java.io.Serializable;
+
+class Post implements Serializable {
     String heading,description,address,pid;
     Double lat,lon,distancetoPost;
 }
@@ -36,6 +42,8 @@ public class ProfileActivity extends AppCompatActivity {
     static int radiusOfSearch = 7;
 
     static int fabOptionClicked;
+
+    static int activitySelected = 1;
 
     //Firebase auth object //
     private FirebaseAuth firebaseAuth;
@@ -56,12 +64,15 @@ public class ProfileActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    activitySelected = 1;
                     fragment = new AmenitiesFragment();
                     break;
                 case R.id.navigation_dashboard:
+                    activitySelected = 2;
                     fragment = new SOSFragment();
                     break;
                 case R.id.navigation_notifications:
+                    activitySelected = 3;
                     fragment = new VolunteerFragment();
                     break;
             }
@@ -91,6 +102,7 @@ public class ProfileActivity extends AppCompatActivity {
         fab_clicked = 0;
 
     }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -140,6 +152,8 @@ public class ProfileActivity extends AppCompatActivity {
         final LinearLayout fab_amenities_layout = (LinearLayout) findViewById(R.id.fab_amenities_layout);
         final LinearLayout fab_sos_layout = (LinearLayout) findViewById(R.id.fab_sos_layout);
         final LinearLayout fab_volunteer_layout = (LinearLayout) findViewById(R.id.fab_volunteer_layout);
+
+
 
         //Translucent Background Created //
         final View trans_bg = findViewById(R.id.translucent_bg);
@@ -283,6 +297,8 @@ public class ProfileActivity extends AppCompatActivity {
                 loadFragment(fragment,1);
             }
         });
+
+
     }
 
     @Override

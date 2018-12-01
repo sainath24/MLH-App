@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class AmenitiesFragment extends Fragment {
     ArrayList<Post> posts;
     Post p;
     RecyclerViewAdapter recyclerViewAdapter;
+    static RecyclerView recyclerView;
 
     private LocationRequest mLocationRequest;
     LocationManager locationManager;
@@ -98,7 +100,7 @@ public class AmenitiesFragment extends Fragment {
                             Log.i("COMEON", "Location received");
                             posts = new ArrayList<>();
 
-                            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.amenities_recycler_view);
+                            recyclerView = (RecyclerView) rootView.findViewById(R.id.amenities_recycler_view);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             recyclerViewAdapter = new RecyclerViewAdapter(posts, getActivity());
                             recyclerView.setAdapter(recyclerViewAdapter);
@@ -153,7 +155,7 @@ public class AmenitiesFragment extends Fragment {
             posts = new ArrayList<>();
 
 
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.amenities_recycler_view);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.amenities_recycler_view);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerViewAdapter = new RecyclerViewAdapter(posts, getActivity());
             recyclerView.setAdapter(recyclerViewAdapter);
@@ -193,6 +195,9 @@ public class AmenitiesFragment extends Fragment {
                 }
             });
         }
+
+
+
 
         return rootView;
     }
