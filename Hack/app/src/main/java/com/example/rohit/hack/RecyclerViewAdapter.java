@@ -108,7 +108,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     class DataHolder extends RecyclerView.ViewHolder {
 
-        TextView h,b,l;
+        TextView h,b,l,contact;
         ImageView i;
 
         public DataHolder(@NonNull View itemView) {
@@ -116,6 +116,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             h = (TextView) itemView.findViewById(R.id.card_heading);
             b = (TextView) itemView.findViewById(R.id.card_bytext);
             l = (TextView) itemView.findViewById(R.id.card_location);
+            contact = (TextView) itemView.findViewById(R.id.expanded_post_contact_number);
         }
     }
 
@@ -144,6 +145,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             dataHolder.l.setText("Enable gps to show distance");
         else
             dataHolder.l.setText(new DecimalFormat("##.##").format(p.distancetoPost) + " Km");
+        dataHolder.contact.setText(p.contact);
 
     }
 
